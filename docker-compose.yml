@@ -30,7 +30,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: ./api/Dockerfile
+      dockerfile: ./api/Dockerfile.dev
     container_name: 2026champs_api
     restart: unless-stopped
     ports:
