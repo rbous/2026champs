@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/go-redis/redis/v8"
@@ -14,8 +15,12 @@ import (
 )
 
 func main() {
-	// MongoDB connection
-	mongoURI := "mongodb://admin:password@mongodb:27017/champsdb?authSource=admin"
+	// MongoDB connection - read from environment variable
+	mongoURI := os.Getenv("MONGO_URI")
+	if mongoURI == "" {
+		mongoURI = "mongodb://admin:password@mongodb:27017/champsdb?authSource=admin"
+		log.Println("Warning: MONGO_URI not set, using default")
+	}
 	client, err := mongo.NewClient(options.Client().ApplyURI(mongoURI))
 	if err != nil {
 		log.Fatal(err)
@@ -28,9 +33,19 @@ func main() {
 	}
 	defer client.Disconnect(ctx)
 
-	// Redis connection
+	// Redis connection - read from environment variable
+	redisAddr := os.Getenv("REDIS_URI")
+	if redisAddr == "" {
+		redisAddr = "redis:6379"
+		log.Println("Warning: REDIS_URI not set, using default")
+	}
+	// Remove redis:// prefix if present
+	if len(redisAddr) > 8 && redisAddr[:8] == "redis://" {
+		redisAddr = redisAddr[8:]
+	}
+	
 	rdb := redis.NewClient(&redis.Options{
-		Addr: "redis:6379",
+		Addr: redisAddr,
 	})
 	defer rdb.Close()
 
@@ -51,7 +66,13 @@ func main() {
 		w.Write([]byte("OK"))
 	}).Methods("GET")
 
+	// Get port from environment variable
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
 	// Start server
-	log.Println("Server starting on :8080")
-	log.Fatal(http.ListenAndServe(":8080", r))
+	log.Printf("Server starting on :%s\n", port)
+	log.Fatal(http.ListenAndServe(":"+port, r))
 }
