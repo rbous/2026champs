@@ -1,0 +1,228 @@
+definitions:
+  handlers.CreateRoomRequest:
+    properties:
+      hostPlayerId:
+        type: string
+      settings:
+        $ref: '#/definitions/model.RoomSettings'
+    type: object
+  handlers.JoinRoomRequest:
+    properties:
+      playerName:
+        type: string
+      roomCode:
+        type: string
+    type: object
+  handlers.StartSessionRequest:
+    properties:
+      roomCode:
+        type: string
+    type: object
+  model.Player:
+    properties:
+      id:
+        type: string
+      joinedAt:
+        type: string
+      nickname:
+        type: string
+      rating:
+        type: integer
+      roomCode:
+        type: string
+      score:
+        type: integer
+    type: object
+  model.Room:
+    properties:
+      activeSessionId:
+        type: string
+      code:
+        type: string
+      createdAt:
+        type: string
+      hostPlayerId:
+        type: string
+      settings:
+        $ref: '#/definitions/model.RoomSettings'
+      status:
+        $ref: '#/definitions/model.RoomStatus'
+    type: object
+  model.RoomSettings:
+    properties:
+      maxPlayers:
+        type: integer
+      mode:
+        description: '"realtime" or "async"'
+        type: string
+      questionSetId:
+        type: string
+      timePerQuestionSec:
+        type: integer
+    type: object
+  model.RoomStatus:
+    enum:
+    - waiting
+    - live
+    - ended
+    type: string
+    x-enum-varnames:
+    - RoomWaiting
+    - RoomLive
+    - RoomEnded
+  model.Session:
+    properties:
+      endedAt:
+        type: string
+      id:
+        type: string
+      roomCode:
+        type: string
+      startedAt:
+        type: string
+      status:
+        $ref: '#/definitions/model.SessionStatus'
+    type: object
+  model.SessionStatus:
+    enum:
+    - waiting
+    - active
+    - ended
+    type: string
+    x-enum-varnames:
+    - SessionWaiting
+    - SessionActive
+    - SessionEnded
+info:
+  contact: {}
+paths:
+  /rooms:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new game room with the provided settings
+      parameters:
+      - description: Room creation request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.CreateRoomRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Room'
+        "400":
+          description: Invalid request body
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Create a new game room
+      tags:
+      - rooms
+  /rooms/{code}:
+    get:
+      description: Retrieves a room by its code
+      parameters:
+      - description: Room code
+        in: path
+        name: code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Room'
+        "400":
+          description: Room code is required
+          schema:
+            type: string
+        "404":
+          description: Room not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Get a room by code
+      tags:
+      - rooms
+  /rooms/join:
+    post:
+      consumes:
+      - application/json
+      description: Allows a player to join a room
+      parameters:
+      - description: Join room request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.JoinRoomRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Player'
+        "400":
+          description: Invalid request body or missing fields
+          schema:
+            type: string
+        "404":
+          description: Room not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Join a room
+      tags:
+      - rooms
+  /sessions:
+    post:
+      consumes:
+      - application/json
+      description: Starts a new game session in a room
+      parameters:
+      - description: Start session request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.StartSessionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Session'
+        "400":
+          description: Invalid request body or missing room code
+          schema:
+            type: string
+        "404":
+          description: Room not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Start a new game session
+      tags:
+      - sessions
+swagger: "2.0"

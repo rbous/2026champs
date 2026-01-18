@@ -2,6 +2,7 @@ package mongo
 
 import (
 	"context"
+	"log"
 	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -17,5 +18,6 @@ func NewMongoClient(uri string) (*mongo.Client, error) {
 		return nil, err
 	}
 
+	log.Println("Connected to MongoDB successfully")
 	return client, nil
 }

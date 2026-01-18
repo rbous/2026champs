@@ -29,7 +29,17 @@ type CreateRoomRequest struct {
 	Settings     model.RoomSettings `json:"settings"`
 }
 
-// CreateRoom creates a new game room
+// CreateRoom godoc
+// @Summary Create a new game room
+// @Description Creates a new game room with the provided settings
+// @Tags rooms
+// @Accept json
+// @Produce json
+// @Param request body CreateRoomRequest true "Room creation request"
+// @Success 200 {object} model.Room
+// @Failure 400 {string} string "Invalid request body"
+// @Failure 500 {string} string "Internal server error"
+// @Router /rooms [post]
 func CreateRoom(app *app.App) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req CreateRoomRequest
@@ -91,7 +101,18 @@ type JoinRoomRequest struct {
 	PlayerName string `json:"playerName"`
 }
 
-// JoinRoom allows a player to join a room
+// JoinRoom godoc
+// @Summary Join a room
+// @Description Allows a player to join a room
+// @Tags rooms
+// @Accept json
+// @Produce json
+// @Param request body JoinRoomRequest true "Join room request"
+// @Success 200 {object} model.Player
+// @Failure 400 {string} string "Invalid request body or missing fields"
+// @Failure 404 {string} string "Room not found"
+// @Failure 500 {string} string "Internal server error"
+// @Router /rooms/join [post]
 func JoinRoom(app *app.App) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req JoinRoomRequest
@@ -145,7 +166,17 @@ func JoinRoom(app *app.App) http.HandlerFunc {
 	}
 }
 
-// GetRoom retrieves a room by code
+// GetRoom godoc
+// @Summary Get a room by code
+// @Description Retrieves a room by its code
+// @Tags rooms
+// @Produce json
+// @Param code path string true "Room code"
+// @Success 200 {object} model.Room
+// @Failure 400 {string} string "Room code is required"
+// @Failure 404 {string} string "Room not found"
+// @Failure 500 {string} string "Internal server error"
+// @Router /rooms/{code} [get]
 func GetRoom(app *app.App) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)

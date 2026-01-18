@@ -1,0 +1,347 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/rooms": {
+            "post": {
+                "description": "Creates a new game room with the provided settings",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "rooms"
+                ],
+                "summary": "Create a new game room",
+                "parameters": [
+                    {
+                        "description": "Room creation request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.CreateRoomRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Room"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/rooms/join": {
+            "post": {
+                "description": "Allows a player to join a room",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "rooms"
+                ],
+                "summary": "Join a room",
+                "parameters": [
+                    {
+                        "description": "Join room request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.JoinRoomRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Player"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request body or missing fields",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Room not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/rooms/{code}": {
+            "get": {
+                "description": "Retrieves a room by its code",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "rooms"
+                ],
+                "summary": "Get a room by code",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Room code",
+                        "name": "code",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Room"
+                        }
+                    },
+                    "400": {
+                        "description": "Room code is required",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Room not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/sessions": {
+            "post": {
+                "description": "Starts a new game session in a room",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "sessions"
+                ],
+                "summary": "Start a new game session",
+                "parameters": [
+                    {
+                        "description": "Start session request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.StartSessionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Session"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request body or missing room code",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Room not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "handlers.CreateRoomRequest": {
+            "type": "object",
+            "properties": {
+                "hostPlayerId": {
+                    "type": "string"
+                },
+                "settings": {
+                    "$ref": "#/definitions/model.RoomSettings"
+                }
+            }
+        },
+        "handlers.JoinRoomRequest": {
+            "type": "object",
+            "properties": {
+                "playerName": {
+                    "type": "string"
+                },
+                "roomCode": {
+                    "type": "string"
+                }
+            }
+        },
+        "handlers.StartSessionRequest": {
+            "type": "object",
+            "properties": {
+                "roomCode": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Player": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "joinedAt": {
+                    "type": "string"
+                },
+                "nickname": {
+                    "type": "string"
+                },
+                "rating": {
+                    "type": "integer"
+                },
+                "roomCode": {
+                    "type": "string"
+                },
+                "score": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.Room": {
+            "type": "object",
+            "properties": {
+                "activeSessionId": {
+                    "type": "string"
+                },
+                "code": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "hostPlayerId": {
+                    "type": "string"
+                },
+                "settings": {
+                    "$ref": "#/definitions/model.RoomSettings"
+                },
+                "status": {
+                    "$ref": "#/definitions/model.RoomStatus"
+                }
+            }
+        },
+        "model.RoomSettings": {
+            "type": "object",
+            "properties": {
+                "maxPlayers": {
+                    "type": "integer"
+                },
+                "mode": {
+                    "description": "\"realtime\" or \"async\"",
+                    "type": "string"
+                },
+                "questionSetId": {
+                    "type": "string"
+                },
+                "timePerQuestionSec": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.RoomStatus": {
+            "type": "string",
+            "enum": [
+                "waiting",
+                "live",
+                "ended"
+            ],
+            "x-enum-varnames": [
+                "RoomWaiting",
+                "RoomLive",
+                "RoomEnded"
+            ]
+        },
+        "model.Session": {
+            "type": "object",
+            "properties": {
+                "endedAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "roomCode": {
+                    "type": "string"
+                },
+                "startedAt": {
+                    "type": "string"
+                },
+                "status": {
+                    "$ref": "#/definitions/model.SessionStatus"
+                }
+            }
+        },
+        "model.SessionStatus": {
+            "type": "string",
+            "enum": [
+                "waiting",
+                "active",
+                "ended"
+            ],
+            "x-enum-varnames": [
+                "SessionWaiting",
+                "SessionActive",
+                "SessionEnded"
+            ]
+        }
+    }
+}

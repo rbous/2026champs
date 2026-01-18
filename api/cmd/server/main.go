@@ -15,8 +15,15 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+
+	_ "2026champs/docs" // Swagger docs
 )
 
+// @title 2026 Champs API
+// @version 1.0
+// @description API for 2026 Champs game
+// @host localhost:8080
+// @BasePath /api
 func main() {
 	cfg := config.Load()
 

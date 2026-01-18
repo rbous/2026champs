@@ -16,7 +16,18 @@ type StartSessionRequest struct {
 	RoomCode string `json:"roomCode"`
 }
 
-// StartSession starts a new game session in a room
+// StartSession godoc
+// @Summary Start a new game session
+// @Description Starts a new game session in a room
+// @Tags sessions
+// @Accept json
+// @Produce json
+// @Param request body StartSessionRequest true "Start session request"
+// @Success 200 {object} model.Session
+// @Failure 400 {string} string "Invalid request body or missing room code"
+// @Failure 404 {string} string "Room not found"
+// @Failure 500 {string} string "Internal server error"
+// @Router /sessions [post]
 func StartSession(app *app.App) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req StartSessionRequest

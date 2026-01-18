@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 func NewRouter(app *app.App) http.Handler {
@@ -46,6 +47,9 @@ func NewRouter(app *app.App) http.Handler {
 			next.ServeHTTP(w, r)
 		})
 	})
+
+	// Swagger UI
+	r.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
 
 	return r
 }
