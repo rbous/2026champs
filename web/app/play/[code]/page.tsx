@@ -4,6 +4,8 @@ import { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { player, getPlayerWebSocketUrl, type Question, type SubmitAnswerResponse } from '@/lib/api';
 import { usePlayerWebSocket, type NextQuestionEvent, type EvaluationResultEvent, type RoomEndedEvent } from '@/hooks/useWebSocket';
+import LobbyBackground from '@/components/LobbyBackground';
+import GameBackground from '@/components/GameBackground';
 
 type GameState = 'loading' | 'answering' | 'evaluated' | 'done' | 'waiting_for_ai' | 'waiting_for_start';
 
@@ -240,11 +242,12 @@ export default function PlayerGame() {
     // Waiting for room to start
     if (gameState === 'waiting_for_start') {
         return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="text-center">
-                    <div className="text-6xl mb-4">⏳</div>
-                    <h1 className="text-2xl font-bold mb-2">Waiting for Game to Start</h1>
-                    <p className="text-[var(--foreground-muted)]">
+            <div className="min-h-screen flex items-center justify-center relative">
+                <LobbyBackground />
+                <div className="relative z-10 text-center card-party max-w-md animate-bounce-slow">
+                    <div className="text-6xl mb-6">⏳</div>
+                    <h1 className="text-3xl font-black mb-4">Waiting for Party...</h1>
+                    <p className="text-xl font-bold text-[var(--text-muted)]">
                         The host will start the game soon. Get ready!
                     </p>
                 </div>
@@ -255,19 +258,20 @@ export default function PlayerGame() {
     // Done state
     if (gameState === 'done') {
         return (
-            <div className="min-h-screen flex items-center justify-center p-6">
-                <div className="card text-center max-w-md animate-slide-up">
-                    <div className="text-5xl mb-4">🎉</div>
-                    <h1 className="text-2xl font-bold mb-2">You&apos;re Done!</h1>
-                    <p className="text-[var(--foreground-muted)] mb-6">
-                        Thanks for completing the survey
+            <div className="min-h-screen flex items-center justify-center p-6 relative">
+                <LobbyBackground />
+                <div className="card-party text-center max-w-md animate-slide-up">
+                    <div className="text-6xl mb-6 animate-spin-slow">🎉</div>
+                    <h1 className="text-4xl font-black mb-4">You're Done!</h1>
+                    <p className="text-xl font-bold text-[var(--text-muted)] mb-8">
+                        Thanks for playing!
                     </p>
-                    <div className="text-4xl font-bold text-gradient mb-6">
-                        {totalPoints || 0} points
+                    <div className="text-5xl font-black text-party-gradient mb-8 drop-shadow-sm">
+                        {totalPoints || 0} pts
                     </div>
                     <button
                         onClick={() => router.push('/')}
-                        className="btn btn-secondary"
+                        className="btn btn-secondary w-full"
                     >
                         Back to Home
                     </button>
@@ -277,16 +281,17 @@ export default function PlayerGame() {
     }
 
     return (
-        <div className="min-h-screen p-6 flex flex-col">
+        <div className="min-h-screen p-6 flex flex-col relative overflow-hidden">
+            <GameBackground />
             {/* Header */}
-            <header className="flex items-center justify-between mb-6">
+            <header className="relative z-10 flex items-center justify-between mb-6">
                 <div className="flex items-center gap-4">
-                    <span className="badge badge-neutral">Room: {code}</span>
+                    <span className="badge-party bg-white shadow-sm">Room: {code}</span>
                 </div>
                 <div className="flex items-center gap-4">
-                    <div className="text-right">
-                        <div className="text-2xl font-bold text-gradient">{totalPoints || 0}</div>
-                        <div className="text-xs text-[var(--foreground-muted)]">points</div>
+                    <div className="text-right bg-white px-4 py-2 rounded-xl border-2 border-black shadow-[4px_4px_0px_#000]">
+                        <div className="text-2xl font-black text-[var(--color-purple)]">{totalPoints || 0}</div>
+                        <div className="text-xs font-bold text-[var(--text-muted)] uppercase">points</div>
                     </div>
                     <button
                         onClick={() => {
@@ -297,7 +302,7 @@ export default function PlayerGame() {
                                 router.push('/');
                             }
                         }}
-                        className="btn btn-ghost text-xs text-[var(--foreground-muted)]"
+                        className="btn btn-ghost text-xs font-bold"
                     >
                         Leave
                     </button>
@@ -305,31 +310,32 @@ export default function PlayerGame() {
             </header>
 
             {/* Question Card */}
-            <div className="flex-1 flex items-center justify-center">
+            <div className="flex-1 flex items-center justify-center relative z-10">
                 <div className="w-full max-w-2xl">
                     {/* Result display */}
                     {gameState === 'evaluated' && result && (
-                        <div className={`card mb-4 animate-slide-up ${result.resolution === 'SAT'
-                            ? 'border-[var(--success)]'
-                            : 'border-[var(--warning)]'
-                            }`} style={{ borderWidth: 2 }}>
+                        <div className={`card-party mb-8 animate-slide-up ${result.resolution === 'SAT'
+                            ? 'border-[var(--color-green)]'
+                            : 'border-[var(--color-yellow)]'
+                            }`} style={{ borderWidth: '4px' }}>
                             <div className="flex items-center gap-3 mb-3">
-                                <span className={`badge ${result.resolution === 'SAT' ? 'badge-success' : 'badge-warning'
-                                    }`}>
-                                    {result.resolution === 'SAT' ? '✓ Satisfactory' : '⚡ Needs More'}
+                                <span className="badge-party text-lg" style={{
+                                    borderColor: result.resolution === 'SAT' ? 'var(--color-green)' : 'var(--color-yellow)'
+                                }}>
+                                    {result.resolution === 'SAT' ? '✓ NAILED IT!' : '⚡ KEEP GOING!'}
                                 </span>
-                                <span className="text-xl font-bold text-gradient">
+                                <span className="text-2xl font-black text-[var(--color-purple)]">
                                     +{result.pointsEarned} pts
                                 </span>
                             </div>
-                            <p className="text-[var(--foreground-muted)]">{result.evalSummary}</p>
+                            <p className="text-lg font-bold text-[var(--text-dark)]">{result.evalSummary}</p>
                             {result.followUp && (
-                                <p className="text-sm mt-2 text-[var(--accent)]">
-                                    Follow-up question coming up...
+                                <p className="text-sm font-bold mt-4 text-[var(--color-blue)] animate-pulse">
+                                    Follow-up question incoming...
                                 </p>
                             )}
                             {result.nextQuestion && (
-                                <p className="text-sm mt-2 text-[var(--success)]">
+                                <p className="text-sm font-bold mt-4 text-[var(--color-green)] animate-pulse">
                                     Next question loading...
                                 </p>
                             )}
@@ -337,27 +343,30 @@ export default function PlayerGame() {
                     )}
 
                     {/* Question */}
-                    <div className="card animate-fade-in">
+                    <div className="card-party animate-pop-in">
                         {currentQuestion && (
                             <>
-                                <div className="flex items-center gap-2 mb-4">
-                                    <span className="badge badge-neutral">{currentQuestion.key}</span>
-                                    <span className="badge badge-neutral">
-                                        {currentQuestion.type === 'ESSAY' ? '📝 Essay' : '📊 Rating'}
+                                <div className="flex items-center gap-2 mb-6">
+                                    <span className="badge-party" style={{ borderColor: 'var(--border-color)' }}>#{currentQuestion.key}</span>
+                                    <span className="badge-party" style={{ borderColor: 'var(--color-blue)' }}>
+                                        {currentQuestion.type === 'ESSAY' ? '📝 Essay' :
+                                            currentQuestion.type === 'MCQ' ? '🔘 Choice' : '📊 Rating'}
                                     </span>
                                     {currentQuestion.pointsMax && (
-                                        <span className="text-sm text-[var(--foreground-muted)]">
+                                        <span className="text-sm font-bold text-[var(--text-muted)] ml-auto">
                                             Up to {currentQuestion.pointsMax} pts
                                         </span>
                                     )}
                                 </div>
 
-                                <PromptDisplay text={currentQuestion.prompt} />
+                                <div className="text-3xl font-black mb-8 leading-tight">
+                                    <PromptDisplay text={currentQuestion.prompt} />
+                                </div>
 
                                 {/* Essay Input */}
                                 {currentQuestion.type === 'ESSAY' && (gameState === 'answering' || gameState === 'waiting_for_ai') && (
                                     <textarea
-                                        className="input mb-4"
+                                        className="input-party mb-6 text-lg min-h-[200px]"
                                         placeholder="Type your answer here..."
                                         value={answer}
                                         onChange={(e) => setAnswer(e.target.value)}
@@ -369,23 +378,26 @@ export default function PlayerGame() {
 
                                 {/* Waiting UI */}
                                 {gameState === 'waiting_for_ai' && (
-                                    <div className="flex items-center justify-center py-8 text-[var(--accent)] animate-pulse">
+                                    <div className="flex items-center justify-center py-8 text-[var(--color-purple)] animate-pulse">
                                         <div className="spinner mr-3" />
-                                        <span>AI is analyzing your answer...</span>
+                                        <span className="font-bold text-xl">AI Brain is Thinking...</span>
                                     </div>
                                 )}
 
                                 {/* Degree Slider */}
                                 {currentQuestion.type === 'DEGREE' && gameState === 'answering' && (
-                                    <div className="mb-6">
-                                        <div className="flex justify-between text-sm text-[var(--foreground-muted)] mb-2">
+                                    <div className="mb-8 p-6 bg-[var(--bg-cream)] rounded-xl border-2 border-[var(--border-color)]">
+                                        <div className="flex justify-between text-lg font-bold text-[var(--text-muted)] mb-4">
                                             <span>{currentQuestion.scaleMin || 1}</span>
-                                            <span className="text-2xl font-bold text-gradient">{degreeValue}</span>
+                                            <span className="text-4xl font-black text-[var(--color-purple)]">{degreeValue}</span>
                                             <span>{currentQuestion.scaleMax || 5}</span>
                                         </div>
                                         <input
                                             type="range"
-                                            className="slider"
+                                            className="w-full h-4 bg-[var(--border-color)] rounded-full appearance-none cursor-pointer"
+                                            style={{
+                                                background: `linear-gradient(to right, var(--color-pink) 0%, var(--color-purple) ${(degreeValue - (currentQuestion.scaleMin || 1)) / ((currentQuestion.scaleMax || 5) - (currentQuestion.scaleMin || 1)) * 100}%, var(--bg-cream) ${(degreeValue - (currentQuestion.scaleMin || 1)) / ((currentQuestion.scaleMax || 5) - (currentQuestion.scaleMin || 1)) * 100}%, var(--bg-cream) 100%)`
+                                            }}
                                             min={currentQuestion.scaleMin || 1}
                                             max={currentQuestion.scaleMax || 5}
                                             value={degreeValue}
@@ -423,15 +435,15 @@ export default function PlayerGame() {
                                         <button
                                             onClick={handleSubmit}
                                             disabled={submitting || (currentQuestion.type === 'ESSAY' && !answer.trim())}
-                                            className="btn btn-primary flex-1 py-4"
+                                            className="btn btn-primary flex-1 py-4 text-xl hover:scale-105"
                                         >
                                             {submitting ? (
                                                 <span className="flex items-center gap-2">
-                                                    <div className="spinner" style={{ width: 20, height: 20 }} />
-                                                    Submitting...
+                                                    <div className="spinner border-white" style={{ width: 24, height: 24 }} />
+                                                    Sending...
                                                 </span>
                                             ) : (
-                                                'Submit Answer'
+                                                '🚀 Submit Answer'
                                             )}
                                         </button>
                                     </div>
@@ -439,20 +451,20 @@ export default function PlayerGame() {
 
                                 {/* Try Again State (Evaluated but UNSAT) */}
                                 {gameState === 'evaluated' && result?.resolution === 'UNSAT' && (
-                                    <div className="mt-6 flex gap-3">
+                                    <div className="mt-8 flex gap-4">
                                         <button
                                             onClick={() => {
                                                 setGameState('answering');
                                                 setResult(null);
                                             }}
-                                            className="btn btn-primary flex-1"
+                                            className="btn btn-primary flex-1 hover:scale-105"
                                         >
-                                            Try Again
+                                            🔄 Try Again
                                         </button>
 
                                         <button
                                             onClick={handleSkip}
-                                            className="btn btn-ghost"
+                                            className="btn btn-secondary border-dashed"
                                         >
                                             Skip Question
                                         </button>

@@ -132,18 +132,20 @@ export default function SurveyForm({
     const displayError = externalError || formError;
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-8">
+        <form onSubmit={handleSubmit} className="space-y-8 animate-fade-in relative z-10">
             {/* Basic Info */}
-            <div className="card">
-                <h2 className="text-lg font-semibold mb-4">Survey Details</h2>
+            <div className="card-party group">
+                <h2 className="text-3xl font-black mb-6 text-[var(--color-purple)] group-hover:animate-wiggle inline-block">
+                    📋 Survey Deets
+                </h2>
 
                 <div className="space-y-4">
                     <div>
                         <label className="input-label">Title</label>
                         <input
                             type="text"
-                            className="input"
-                            placeholder="e.g., Product Feedback Survey"
+                            className="input-party"
+                            placeholder="e.g., The Ultimate Snack Ranking"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                         />
@@ -152,8 +154,8 @@ export default function SurveyForm({
                     <div>
                         <label className="input-label">Intent / Goal</label>
                         <textarea
-                            className="input"
-                            placeholder="What do you want to learn from this survey?"
+                            className="input-party"
+                            placeholder="What's the vibe? What do we need to know?"
                             value={intent}
                             onChange={(e) => setIntent(e.target.value)}
                             rows={2}
@@ -162,10 +164,10 @@ export default function SurveyForm({
 
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="input-label">Max Follow-ups per Question</label>
+                            <label className="input-label">Max Follow-ups</label>
                             <input
                                 type="number"
-                                className="input"
+                                className="input-party font-mono"
                                 min={0}
                                 max={5}
                                 value={maxFollowUps}
@@ -173,10 +175,10 @@ export default function SurveyForm({
                             />
                         </div>
                         <div>
-                            <label className="input-label">Allow Skip After (attempts)</label>
+                            <label className="input-label">Allow Skip After</label>
                             <input
                                 type="number"
-                                className="input"
+                                className="input-party font-mono"
                                 min={0}
                                 max={5}
                                 value={allowSkipAfter}
@@ -188,64 +190,61 @@ export default function SurveyForm({
             </div>
 
             {/* Questions */}
-            <div className="space-y-4">
+            <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                    <h2 className="text-lg font-semibold">Questions</h2>
-                    <button type="button" onClick={addQuestion} className="btn btn-secondary">
-                        + Add Question
+                    <h2 className="text-2xl font-black text-[var(--text-dark)]">❓ Questions</h2>
+                    <button type="button" onClick={addQuestion} className="btn btn-secondary hover:rotate-2">
+                        + Add New Question
                     </button>
                 </div>
 
                 {questions.map((q, index) => (
-                    <div key={index} className="card">
-                        <div className="flex items-center justify-between mb-4">
-                            <span className="badge badge-neutral">Q{index + 1}</span>
+                    <div key={index} className="card-party animate-pop-in" style={{ animationDelay: `${index * 0.1}s` }}>
+                        <div className="flex items-center justify-between mb-6">
+                            <span className="badge-party rotate-3" style={{ borderColor: 'var(--color-yellow)' }}>
+                                Question #{index + 1}
+                            </span>
                             {questions.length > 1 && (
                                 <button
                                     type="button"
                                     onClick={() => removeQuestion(index)}
-                                    className="btn btn-ghost text-[var(--error)] text-sm"
+                                    className="btn btn-ghost text-[var(--color-pink)] font-black text-xl hover:scale-110 hover:rotate-90 transition-transform"
                                 >
-                                    Remove
+                                    ✕
                                 </button>
                             )}
                         </div>
 
-                        <div className="space-y-4">
+                        <div className="space-y-6">
                             {/* Question Type */}
                             <div>
-                                <label className="input-label">Type</label>
-                                <div className="flex gap-2">
-                                    <button
-                                        type="button"
-                                        onClick={() => updateQuestion(index, 'type', 'ESSAY')}
-                                        className={`btn flex-1 ${q.type === 'ESSAY' ? 'btn-primary' : 'btn-secondary'}`}
-                                    >
-                                        📝 Essay
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => updateQuestion(index, 'type', 'DEGREE')}
-                                        className={`btn flex-1 ${q.type === 'DEGREE' ? 'btn-primary' : 'btn-secondary'}`}
-                                    >
-                                        📊 Rating
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => updateQuestion(index, 'type', 'MCQ')}
-                                        className={`btn flex-1 ${q.type === 'MCQ' ? 'btn-primary' : 'btn-secondary'}`}
-                                    >
-                                        ✅ Multiple Choice
-                                    </button>
+                                <label className="input-label mb-3">Type of Fun</label>
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    {[
+                                        { id: 'ESSAY', label: 'Essay', icon: '✍️', desc: 'Open text vibes', color: 'var(--color-blue)' },
+                                        { id: 'DEGREE', label: 'Rating', icon: '⭐', desc: '1 to 10 scale', color: 'var(--color-yellow)' },
+                                        { id: 'MCQ', label: 'Choice', icon: '🤔', desc: 'Pick the best', color: 'var(--color-green)' }
+                                    ].map((type) => (
+                                        <div
+                                            key={type.id}
+                                            onClick={() => updateQuestion(index, 'type', type.id)}
+                                            className={`choice-card-party flex flex-col gap-2 ${q.type === type.id ? 'selected' : ''}`}
+                                            style={{ borderColor: q.type === type.id ? type.color : undefined }}
+                                        >
+                                            <div className="text-3xl mb-1 filter drop-shadow-sm">{type.icon}</div>
+                                            <div className="font-bold text-lg">{type.label}</div>
+                                            <div className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wide">{type.desc}</div>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
 
                             {/* Prompt */}
                             <div>
-                                <label className="input-label">Question Prompt</label>
+                                <label className="input-label">The Question</label>
                                 <textarea
-                                    className="input"
-                                    placeholder="What would you like to ask?"
+                                    className="input-party text-lg"
+                                    placeholder="What's burning in your mind?"
                                     value={q.prompt}
                                     onChange={(e) => updateQuestion(index, 'prompt', e.target.value)}
                                     rows={2}
@@ -254,12 +253,12 @@ export default function SurveyForm({
 
                             {/* Essay-specific fields */}
                             {q.type === 'ESSAY' && (
-                                <>
-                                    <div>
-                                        <label className="input-label">Rubric (AI evaluation criteria)</label>
+                                <div className="animate-fade-in p-4 bg-[var(--bg-cream)] rounded-xl border-2 border-dashed border-[var(--border-color)]">
+                                    <div className="mb-4">
+                                        <label className="input-label">Rubric (AI Brain)</label>
                                         <textarea
-                                            className="input"
-                                            placeholder="What makes a good answer? e.g., Include specific examples, mention tradeoffs..."
+                                            className="input-party"
+                                            placeholder="What makes a legendary answer?"
                                             value={q.rubric}
                                             onChange={(e) => updateQuestion(index, 'rubric', e.target.value)}
                                             rows={2}
@@ -270,7 +269,7 @@ export default function SurveyForm({
                                             <label className="input-label">Max Points</label>
                                             <input
                                                 type="number"
-                                                className="input"
+                                                className="input-party font-mono"
                                                 min={1}
                                                 max={1000}
                                                 value={q.pointsMax}
@@ -278,10 +277,10 @@ export default function SurveyForm({
                                             />
                                         </div>
                                         <div>
-                                            <label className="input-label">SAT Threshold (0-1)</label>
+                                            <label className="input-label">SAT Threshold</label>
                                             <input
                                                 type="number"
-                                                className="input"
+                                                className="input-party font-mono"
                                                 min={0}
                                                 max={1}
                                                 step={0.1}
@@ -290,17 +289,17 @@ export default function SurveyForm({
                                             />
                                         </div>
                                     </div>
-                                </>
+                                </div>
                             )}
 
                             {/* Degree-specific fields */}
                             {q.type === 'DEGREE' && (
-                                <div className="grid grid-cols-3 gap-4">
+                                <div className="grid grid-cols-3 gap-4 animate-fade-in p-4 bg-[var(--bg-cream)] rounded-xl border-2 border-dashed border-[var(--border-color)]">
                                     <div>
-                                        <label className="input-label">Min Scale</label>
+                                        <label className="input-label">Min</label>
                                         <input
                                             type="number"
-                                            className="input"
+                                            className="input-party font-mono text-center"
                                             min={1}
                                             max={10}
                                             value={q.scaleMin}
@@ -308,10 +307,10 @@ export default function SurveyForm({
                                         />
                                     </div>
                                     <div>
-                                        <label className="input-label">Max Scale</label>
+                                        <label className="input-label">Max</label>
                                         <input
                                             type="number"
-                                            className="input"
+                                            className="input-party font-mono text-center"
                                             min={1}
                                             max={10}
                                             value={q.scaleMax}
@@ -322,7 +321,7 @@ export default function SurveyForm({
                                         <label className="input-label">Points</label>
                                         <input
                                             type="number"
-                                            className="input"
+                                            className="input-party font-mono text-center"
                                             min={1}
                                             max={100}
                                             value={q.pointsMax}
@@ -334,30 +333,33 @@ export default function SurveyForm({
 
                             {/* MCQ-specific fields */}
                             {q.type === 'MCQ' && (
-                                <>
-                                    <div>
+                                <div className="animate-fade-in p-4 bg-[var(--bg-cream)] rounded-xl border-2 border-dashed border-[var(--border-color)]">
+                                    <div className="mb-4">
                                         <label className="input-label">Options</label>
-                                        <div className="space-y-2">
+                                        <div className="space-y-3">
                                             {q.options.map((option, optIndex) => (
                                                 <div key={optIndex} className="flex gap-2">
-                                                    <input
-                                                        type="text"
-                                                        className="input flex-1"
-                                                        placeholder={`Option ${optIndex + 1}`}
-                                                        value={option}
-                                                        onChange={(e) => {
-                                                            const newOptions = [...q.options];
-                                                            newOptions[optIndex] = e.target.value;
-                                                            updateQuestion(index, 'options', newOptions);
-                                                        }}
-                                                    />
+                                                    <div className="flex-1 relative">
+                                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-lg">👉</span>
+                                                        <input
+                                                            type="text"
+                                                            className="input-party pl-10"
+                                                            placeholder={`Option ${optIndex + 1}`}
+                                                            value={option}
+                                                            onChange={(e) => {
+                                                                const newOptions = [...q.options];
+                                                                newOptions[optIndex] = e.target.value;
+                                                                updateQuestion(index, 'options', newOptions);
+                                                            }}
+                                                        />
+                                                    </div>
                                                     <button
                                                         type="button"
                                                         onClick={() => {
                                                             const newOptions = q.options.filter((_, i) => i !== optIndex);
                                                             updateQuestion(index, 'options', newOptions);
                                                         }}
-                                                        className="btn btn-ghost text-[var(--error)]"
+                                                        className="btn btn-ghost text-[var(--color-pink)] hover:rotate-90 hover:scale-110 transition-transform"
                                                     >
                                                         ✕
                                                     </button>
@@ -369,9 +371,9 @@ export default function SurveyForm({
                                                     const newOptions = [...q.options, ''];
                                                     updateQuestion(index, 'options', newOptions);
                                                 }}
-                                                className="btn btn-secondary w-full"
+                                                className="btn btn-secondary w-full border-dashed"
                                             >
-                                                + Add Option
+                                                + Add Another Option
                                             </button>
                                         </div>
                                     </div>
@@ -379,14 +381,14 @@ export default function SurveyForm({
                                         <label className="input-label">Points</label>
                                         <input
                                             type="number"
-                                            className="input"
+                                            className="input-party font-mono"
                                             min={1}
                                             max={100}
                                             value={q.pointsMax}
                                             onChange={(e) => updateQuestion(index, 'pointsMax', parseInt(e.target.value) || 20)}
                                         />
                                     </div>
-                                </>
+                                </div>
                             )}
                         </div>
                     </div>
@@ -395,8 +397,8 @@ export default function SurveyForm({
 
             {/* Error */}
             {displayError && (
-                <div className="text-[var(--error)] text-center animate-fade-in">
-                    {displayError}
+                <div className="p-4 bg-[var(--color-pink)] text-white font-bold rounded-xl border-2 border-[var(--border-color)] shadow-[4px_4px_0px_#000] text-center animate-fade-in transform rotate-1">
+                    🚨 {displayError} 🚨
                 </div>
             )}
 
@@ -404,12 +406,12 @@ export default function SurveyForm({
             <button
                 type="submit"
                 disabled={isLoading}
-                className="btn btn-primary w-full py-4 text-lg"
+                className="btn btn-primary w-full py-5 text-xl hover:scale-[1.02] active:scale-[0.98]"
             >
                 {isLoading ? (
                     <span className="flex items-center gap-2">
-                        <div className="spinner" style={{ width: 20, height: 20 }} />
-                        Saving...
+                        <div className="spinner border-white" style={{ width: 24, height: 24 }} />
+                        Saving Magic...
                     </span>
                 ) : (
                     submitLabel

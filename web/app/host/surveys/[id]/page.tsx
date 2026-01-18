@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { surveys } from '@/lib/api';
 import SurveyForm, { QuestionInput, toQuestionInput } from '@/components/SurveyForm';
+import GameBackground from '@/components/GameBackground';
 
 export default function EditSurvey() {
     const router = useRouter();
@@ -90,35 +91,46 @@ export default function EditSurvey() {
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center">
-                <div className="spinner" style={{ width: 40, height: 40 }} />
+                <div className="text-center">
+                    <div className="spinner mx-auto mb-4" style={{ width: 40, height: 40 }} />
+                    <p className="font-bold text-[var(--text-muted)]">Loading survey...</p>
+                </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen p-6 max-w-4xl mx-auto">
-            {/* Header */}
-            <div className="flex items-center gap-4 mb-8">
-                <a href="/host" className="btn btn-ghost">← Back</a>
-                <div>
-                    <h1 className="text-2xl font-bold">Edit Survey</h1>
-                    <p className="text-[var(--foreground-muted)] text-sm">
-                        Update your survey questions and settings
-                    </p>
-                </div>
-            </div>
+        <div className="min-h-screen p-6 relative">
+            <GameBackground />
 
-            <SurveyForm
-                initialTitle={initialTitle}
-                initialIntent={initialIntent}
-                initialMaxFollowUps={initialMaxFollowUps}
-                initialAllowSkipAfter={initialAllowSkipAfter}
-                initialQuestions={initialQuestions}
-                onSubmit={handleSubmit}
-                submitLabel="Update Survey"
-                isLoading={submitting}
-                error={error}
-            />
+            <div className="relative z-10 max-w-4xl mx-auto">
+                {/* Header */}
+                <div className="flex items-center gap-4 mb-8">
+                    <a href="/host" className="btn btn-secondary rotate-1 hover:-rotate-1">
+                        ← Back
+                    </a>
+                    <div>
+                        <h1 className="text-3xl font-black">
+                            <span className="text-party-gradient">✏️ Edit Survey</span>
+                        </h1>
+                        <p className="text-[var(--text-muted)] font-bold">
+                            Update your survey questions and settings
+                        </p>
+                    </div>
+                </div>
+
+                <SurveyForm
+                    initialTitle={initialTitle}
+                    initialIntent={initialIntent}
+                    initialMaxFollowUps={initialMaxFollowUps}
+                    initialAllowSkipAfter={initialAllowSkipAfter}
+                    initialQuestions={initialQuestions}
+                    onSubmit={handleSubmit}
+                    submitLabel="💾 Update Survey"
+                    isLoading={submitting}
+                    error={error}
+                />
+            </div>
         </div>
     );
 }

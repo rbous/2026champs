@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { surveys } from '@/lib/api';
 import SurveyForm, { QuestionInput } from '@/components/SurveyForm';
+import GameBackground from '@/components/GameBackground';
 
 export default function NewSurvey() {
     const router = useRouter();
@@ -47,7 +48,7 @@ export default function NewSurvey() {
                 },
                 {
                     type: 'DEGREE',
-                    prompt: "How would you rate the phone’s performance during everyday tasks?",
+                    prompt: "How would you rate the phone's performance during everyday tasks?",
                     rubric: "",
                     pointsMax: 50,
                     threshold: 0.5,
@@ -125,35 +126,43 @@ export default function NewSurvey() {
     };
 
     return (
-        <div className="min-h-screen p-6 max-w-4xl mx-auto">
-            {/* Header */}
-            <div className="flex items-center justify-between mb-8">
-                <div className="flex items-center gap-4">
-                    <a href="/host" className="btn btn-ghost">← Back</a>
-                    <div>
-                        <h1 className="text-2xl font-bold">Create Survey</h1>
-                        <p className="text-[var(--foreground-muted)] text-sm">
-                            Design your AI-powered survey questions
-                        </p>
-                    </div>
-                </div>
-                <button
-                    onClick={loadTemplate}
-                    className="btn btn-secondary"
-                >
-                    📱 Load Smartphone Template
-                </button>
-            </div>
+        <div className="min-h-screen p-6 relative">
+            <GameBackground />
 
-            <SurveyForm
-                initialTitle={formData.title}
-                initialIntent={formData.intent}
-                initialQuestions={formData.questions.length > 0 ? formData.questions : undefined}
-                onSubmit={handleSubmit}
-                submitLabel="Create Survey"
-                isLoading={loading}
-                error={error}
-            />
+            <div className="relative z-10 max-w-4xl mx-auto">
+                {/* Header */}
+                <div className="flex items-center justify-between mb-8">
+                    <div className="flex items-center gap-4">
+                        <a href="/host" className="btn btn-secondary rotate-1 hover:-rotate-1">
+                            ← Back
+                        </a>
+                        <div>
+                            <h1 className="text-3xl font-black">
+                                <span className="text-party-gradient">✨ Create Survey</span>
+                            </h1>
+                            <p className="text-[var(--text-muted)] font-bold">
+                                Design your AI-powered survey questions
+                            </p>
+                        </div>
+                    </div>
+                    <button
+                        onClick={loadTemplate}
+                        className="btn btn-yellow hover:scale-105 hover:rotate-2"
+                    >
+                        📱 Load Template
+                    </button>
+                </div>
+
+                <SurveyForm
+                    initialTitle={formData.title}
+                    initialIntent={formData.intent}
+                    initialQuestions={formData.questions.length > 0 ? formData.questions : undefined}
+                    onSubmit={handleSubmit}
+                    submitLabel="🚀 Create Survey"
+                    isLoading={loading}
+                    error={error}
+                />
+            </div>
         </div>
     );
 }

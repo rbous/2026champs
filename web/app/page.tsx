@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { rooms } from '@/lib/api';
+import FunBackground from '@/components/FunBackground';
 
 export default function Home() {
   const router = useRouter();
@@ -43,27 +44,34 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4">
+      {/* Background with floating objects */}
+      <FunBackground />
+
       {/* Hero Section */}
-      <div className="text-center mb-12 animate-fade-in">
-        <h1 className="text-5xl font-bold mb-4">
-          <span className="text-gradient">2026 Champs</span>
+      <div className="text-center mb-12 animate-fade-in relative z-10">
+        <h1 className="text-6xl font-black mb-6 hover:scale-105 transition-transform duration-300 transform -rotate-2">
+          <span className="text-party-gradient drop-shadow-sm">2026 CHAMPS</span>
         </h1>
-        <p className="text-lg text-[var(--foreground-muted)] max-w-md">
-          AI-powered surveys with real-time feedback and deep insights
+        <p className="text-xl font-bold text-[var(--text-muted)] max-w-lg mx-auto bg-white/80 p-4 rounded-xl border-2 border-dashed border-[var(--border-color)] rotate-1">
+          🎉 The most fun way to survey!
         </p>
       </div>
 
       {/* Join Room Card */}
-      <div className="card w-full max-w-md animate-slide-up">
-        <h2 className="text-xl font-semibold mb-6 text-center">Join a Room</h2>
+      <div className="card-party w-full max-w-md animate-slide-up">
+        <div className="absolute -top-6 -right-6 text-4xl animate-wiggle transform rotate-12">🎫</div>
 
-        <form onSubmit={handleJoin} className="space-y-4">
-          <div>
+        <h2 className="text-3xl font-black mb-8 text-center text-[var(--color-purple)] uppercase tracking-wide">
+          Join the Party!
+        </h2>
+
+        <form onSubmit={handleJoin} className="space-y-6">
+          <div className="space-y-2">
             <label className="input-label">Room Code</label>
             <input
               type="text"
-              className="input text-center text-2xl font-mono tracking-widest uppercase"
-              placeholder="ABC123"
+              className="input-party text-center text-3xl font-black tracking-[0.2em] uppercase text-[var(--color-pink)]"
+              placeholder="ABC1234"
               value={roomCode}
               onChange={(e) => setRoomCode(e.target.value.toUpperCase())}
               maxLength={8}
@@ -71,12 +79,12 @@ export default function Home() {
             />
           </div>
 
-          <div>
-            <label className="input-label">Your Nickname</label>
+          <div className="space-y-2">
+            <label className="input-label">Nickname</label>
             <input
               type="text"
-              className="input"
-              placeholder="Enter your name"
+              className="input-party"
+              placeholder="What should we call you?"
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
               maxLength={20}
@@ -85,40 +93,37 @@ export default function Home() {
           </div>
 
           {error && (
-            <div className="text-[var(--error)] text-sm text-center animate-fade-in">
-              {error}
+            <div className="p-3 bg-[var(--color-pink)] text-white font-bold rounded-lg text-center animate-fade-in border-2 border-[var(--border-color)] shadow-[4px_4px_0px_#000]">
+              🚨 {error}
             </div>
           )}
 
           <button
             type="submit"
             disabled={loading}
-            className="btn btn-primary w-full text-lg py-4"
+            className="btn btn-primary w-full text-xl py-5 hover:scale-105"
           >
             {loading ? (
               <span className="flex items-center gap-2">
-                <div className="spinner" style={{ width: 20, height: 20 }} />
+                <div className="spinner border-white" style={{ width: 20, height: 20 }} />
                 Joining...
               </span>
             ) : (
-              'Join Room'
+              '🚀 LET\'S GO!'
             )}
           </button>
         </form>
       </div>
 
       {/* Host Link */}
-      <div className="mt-8 animate-fade-in" style={{ animationDelay: '0.3s' }}>
+      <div className="mt-12 animate-fade-in relative z-10" style={{ animationDelay: '0.3s' }}>
         <a
           href="/host/login"
-          className="btn btn-ghost text-sm"
+          className="btn btn-secondary text-sm font-bold rotate-2 hover:-rotate-1"
         >
-          Host a Survey →
+          👑 Host a Party
         </a>
       </div>
-
-      {/* Decorative elements */}
-      <div className="fixed bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[var(--accent)] to-transparent opacity-30" />
     </div>
   );
 }

@@ -1,45 +1,49 @@
 @import "tailwindcss";
 
 /* ========================================
-   DESIGN SYSTEM - 2026 CHAMPS
-   Premium dark-mode survey experience
+   DESIGN SYSTEM - PARTY MODE 🎉
+   Theme: Pure Joy, Neubrutalism Lite
 ======================================== */
 
 :root {
-  /* Colors */
-  --background: #0a0a0f;
-  --background-elevated: #12121a;
-  --background-card: #16161f;
-  --foreground: #f0f0f5;
-  --foreground-muted: #9898a8;
-  
-  /* Accent gradient */
-  --accent-start: #6366f1;
-  --accent-end: #8b5cf6;
-  --accent: #7c3aed;
-  
-  /* Status colors */
-  --success: #10b981;
-  --success-bg: rgba(16, 185, 129, 0.15);
-  --warning: #f59e0b;
-  --warning-bg: rgba(245, 158, 11, 0.15);
-  --error: #ef4444;
-  --error-bg: rgba(239, 68, 68, 0.15);
-  
-  /* Borders */
-  --border: rgba(255, 255, 255, 0.08);
-  --border-hover: rgba(255, 255, 255, 0.15);
-  
-  /* Glass effect */
-  --glass-bg: rgba(22, 22, 31, 0.8);
-  --glass-border: rgba(255, 255, 255, 0.1);
+  /* Vibrant Palette */
+  --bg-cream: #FFFDF5;
+  --bg-white: #FFFFFF;
+
+  --color-pink: #FF6B6B;
+  --color-yellow: #FFD93D;
+  --color-blue: #4D96FF;
+  --color-green: #6BCB77;
+  --color-purple: #9D4EDD;
+
+  --text-dark: #2D3748;
+  --text-muted: #718096;
+
+  /* Shared standard names for compatibility */
+  --background: var(--bg-cream);
+  --foreground: var(--text-dark);
+  --foreground-muted: var(--text-muted);
+
+  --accent: var(--color-pink);
+
+  /* Borders & Shadows */
+  --border-width: 3px;
+  --border-color: #2D3748;
+  --radius-lg: 24px;
+  --radius-md: 16px;
+  --shadow-offset: 4px 4px 0px 0px var(--border-color);
+  --shadow-hover: 6px 6px 0px 0px var(--border-color);
+  --shadow-active: 2px 2px 0px 0px var(--border-color);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-accent: var(--accent);
+  --color-background: var(--bg-cream);
+  --color-foreground: var(--text-dark);
   --font-sans: "Inter", system-ui, sans-serif;
+  --color-party-pink: var(--color-pink);
+  --color-party-yellow: var(--color-yellow);
+  --color-party-blue: var(--color-blue);
+  --color-party-green: var(--color-green);
 }
 
 /* ========================================
@@ -50,255 +54,298 @@
   box-sizing: border-box;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--bg-cream);
+  color: var(--text-dark);
   font-family: "Inter", system-ui, sans-serif;
   min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  /* Dotted background pattern */
+  background-image: radial-gradient(#E2E8F0 2px, transparent 2px);
+  background-size: 30px 30px;
 }
 
-/* Gradient background with subtle noise */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: 
-    radial-gradient(ellipse at top, rgba(99, 102, 241, 0.12) 0%, transparent 50%),
-    radial-gradient(ellipse at bottom right, rgba(139, 92, 246, 0.08) 0%, transparent 50%);
-  pointer-events: none;
-  z-index: -1;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: var(--text-dark);
 }
 
-/* ========================================
-   TYPOGRAPHY
-======================================== */
-
-h1, h2, h3, h4, h5, h6 {
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
+h1 {
+  font-size: 3.5rem;
 }
 
-h1 { font-size: 2.5rem; }
-h2 { font-size: 2rem; }
-h3 { font-size: 1.5rem; }
-h4 { font-size: 1.25rem; }
-
-.text-gradient {
-  background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+h2 {
+  font-size: 2.5rem;
 }
 
 /* ========================================
    COMPONENTS
 ======================================== */
 
-/* Glass Card */
-.card {
-  background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--glass-border);
-  border-radius: 16px;
-  padding: 1.5rem;
-  transition: all 0.2s ease;
+/* Fun Card */
+.card-party {
+  background: var(--bg-white);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: var(--shadow-offset);
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  z-index: 10;
+  color: var(--text-dark);
 }
 
-.card:hover {
-  border-color: var(--border-hover);
-  transform: translateY(-2px);
+.card-party:hover {
+  transform: translate(-2px, -2px) rotate(-1deg);
+  box-shadow: var(--shadow-hover);
 }
 
-/* Buttons */
+/* Base Button */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  font-weight: 500;
-  font-size: 0.95rem;
-  border-radius: 12px;
-  transition: all 0.2s ease;
+  padding: 1rem 2rem;
+  font-weight: 700;
+  font-size: 1.1rem;
+  border-radius: 9999px;
+  /* Pill shape */
+  border: var(--border-width) solid var(--border-color);
+  box-shadow: var(--shadow-offset);
+  transition: all 0.1s ease;
   cursor: pointer;
-  border: none;
-  outline: none;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  position: relative;
+  overflow: hidden;
+  color: var(--text-dark);
+  background: var(--bg-white);
 }
 
+.btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-hover);
+}
+
+.btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: var(--shadow-active);
+}
+
+/* Button Variants */
 .btn-primary {
-  background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+  background: var(--color-pink);
   color: white;
-  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
-}
-
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 30px rgba(99, 102, 241, 0.5);
-}
-
-.btn-primary:active {
-  transform: translateY(0);
 }
 
 .btn-secondary {
-  background: var(--background-card);
-  color: var(--foreground);
-  border: 1px solid var(--border);
+  background: var(--bg-white);
+  color: var(--text-dark);
 }
 
-.btn-secondary:hover {
-  border-color: var(--border-hover);
-  background: var(--background-elevated);
+.btn-yellow {
+  background: var(--color-yellow);
+  color: var(--text-dark);
+}
+
+.btn-blue {
+  background: var(--color-blue);
+  color: white;
+}
+
+.btn-green {
+  background: var(--color-green);
+  color: white;
 }
 
 .btn-ghost {
   background: transparent;
-  color: var(--foreground-muted);
+  border-color: transparent;
+  box-shadow: none;
+  color: var(--text-muted);
 }
 
 .btn-ghost:hover {
-  color: var(--foreground);
-  background: rgba(255, 255, 255, 0.05);
-}
-
-.btn-success {
-  background: var(--success);
-  color: white;
-}
-
-.btn-danger {
-  background: var(--error);
-  color: white;
+  background: rgba(0, 0, 0, 0.05);
+  transform: none;
+  box-shadow: none;
+  color: var(--text-dark);
 }
 
 /* Inputs */
-.input {
+.input-party {
   width: 100%;
-  padding: 0.875rem 1rem;
-  background: var(--background-elevated);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  color: var(--foreground);
-  font-size: 1rem;
+  padding: 1rem 1.5rem;
+  background: var(--bg-white);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--text-dark);
+  box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.05);
   transition: all 0.2s ease;
   outline: none;
 }
 
-.input:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
+.input-party:focus {
+  transform: scale(1.02);
+  box-shadow: var(--shadow-offset);
+  border-color: var(--color-blue);
 }
 
-.input::placeholder {
-  color: var(--foreground-muted);
+.input-party::placeholder {
+  color: #CBD5E0;
 }
 
 .input-label {
   display: block;
   margin-bottom: 0.5rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--foreground-muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
 }
 
-/* Textarea */
-textarea.input {
-  min-height: 120px;
-  resize: vertical;
-  line-height: 1.6;
-}
-
-/* ========================================
-   STATUS BADGES
-======================================== */
-
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  padding: 0.375rem 0.75rem;
-  font-size: 0.8rem;
-  font-weight: 500;
-  border-radius: 9999px;
-}
-
-.badge-success {
-  background: var(--success-bg);
-  color: var(--success);
-}
-
-.badge-warning {
-  background: var(--warning-bg);
-  color: var(--warning);
-}
-
-.badge-error {
-  background: var(--error-bg);
-  color: var(--error);
-}
-
-.badge-neutral {
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--foreground-muted);
-}
-
-/* ========================================
-   SLIDER (for DEGREE questions)
-======================================== */
-
-.slider {
-  -webkit-appearance: none;
-  width: 100%;
-  height: 8px;
-  background: var(--background-elevated);
-  border-radius: 4px;
-  outline: none;
-}
-
-.slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 24px;
-  height: 24px;
-  background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
-  border-radius: 50%;
+/* Choice Cards (Grid Items) */
+.choice-card-party {
+  background: var(--bg-white);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
   cursor: pointer;
-  box-shadow: 0 2px 10px rgba(99, 102, 241, 0.5);
-  transition: transform 0.15s ease;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  text-align: center;
+  color: var(--text-dark);
 }
 
-.slider::-webkit-slider-thumb:hover {
-  transform: scale(1.1);
+.choice-card-party:hover {
+  transform: translateY(-5px) rotate(2deg);
+  box-shadow: var(--shadow-offset);
+  z-index: 5;
+}
+
+.choice-card-party.selected {
+  background: var(--color-yellow);
+  transform: translateY(-5px) rotate(-1deg);
+  box-shadow: var(--shadow-offset);
+}
+
+/* Badges */
+.badge-party {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border: 2px solid var(--border-color);
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  background: white;
+  color: var(--text-dark);
+  box-shadow: 2px 2px 0px var(--border-color);
 }
 
 /* ========================================
    ANIMATIONS
 ======================================== */
 
+@keyframes bounce-slow {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes wiggle {
+
+  0%,
+  100% {
+    transform: rotate(-3deg);
+  }
+
+  50% {
+    transform: rotate(3deg);
+  }
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+
+  70% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
 
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-pop-in {
+  animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.animate-wiggle:hover {
+  animation: wiggle 0.4s ease-in-out infinite;
 }
 
 .animate-fade-in {
@@ -309,153 +356,62 @@ textarea.input {
   animation: slideUp 0.4s ease forwards;
 }
 
-.animate-pulse {
-  animation: pulse 2s ease-in-out infinite;
-}
-
-.animate-spin {
-  animation: spin 1s linear infinite;
-}
-
-/* Stagger children animations */
-.stagger-children > * {
-  animation: fadeIn 0.3s ease forwards;
-  opacity: 0;
-}
-
-.stagger-children > *:nth-child(1) { animation-delay: 0.05s; }
-.stagger-children > *:nth-child(2) { animation-delay: 0.1s; }
-.stagger-children > *:nth-child(3) { animation-delay: 0.15s; }
-.stagger-children > *:nth-child(4) { animation-delay: 0.2s; }
-.stagger-children > *:nth-child(5) { animation-delay: 0.25s; }
-
-/* ========================================
-   LOADING SPINNER
-======================================== */
-
 .spinner {
   width: 24px;
   height: 24px;
-  border: 2px solid var(--border);
-  border-top-color: var(--accent);
+  border: 3px solid var(--border-color);
+  border-top-color: var(--color-pink);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
 
 /* ========================================
-   LEADERBOARD
+   UTILITIES
 ======================================== */
-
-.leaderboard-item {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  background: var(--background-elevated);
-  border-radius: 12px;
-  transition: all 0.2s ease;
-}
-
-.leaderboard-item:hover {
-  background: var(--background-card);
-}
-
-.leaderboard-rank {
-  width: 2.5rem;
-  height: 2.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
-  border-radius: 50%;
-  font-weight: 700;
-  font-size: 0.9rem;
-}
-
-.leaderboard-rank.gold { background: linear-gradient(135deg, #fbbf24, #f59e0b); }
-.leaderboard-rank.silver { background: linear-gradient(135deg, #94a3b8, #64748b); }
-.leaderboard-rank.bronze { background: linear-gradient(135deg, #f97316, #ea580c); }
-
-/* ========================================
-   HISTOGRAM BARS
-======================================== */
-
-.histogram-bar {
-  height: 8px;
-  background: linear-gradient(90deg, var(--accent-start), var(--accent-end));
-  border-radius: 4px;
-  transition: width 0.5s ease;
-}
-
-/* ========================================
-   THEME TAGS
-======================================== */
-
-.theme-tag {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  background: rgba(99, 102, 241, 0.15);
-  border: 1px solid rgba(99, 102, 241, 0.3);
-  border-radius: 9999px;
-  font-size: 0.875rem;
-  color: #a5b4fc;
-  transition: all 0.2s ease;
-}
-
-.theme-tag:hover {
-  background: rgba(99, 102, 241, 0.25);
-  border-color: rgba(99, 102, 241, 0.5);
-}
-
-/* ========================================
-   TOAST NOTIFICATIONS
-======================================== */
-
-.toast {
-  position: fixed;
-  bottom: 1.5rem;
-  right: 1.5rem;
-  padding: 1rem 1.5rem;
-  background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--glass-border);
-  border-radius: 12px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-  animation: slideUp 0.3s ease forwards;
-  z-index: 9999;
-}
-
-/* ========================================
-   ROOM CODE DISPLAY
-======================================== */
-
-.room-code {
-  font-family: "JetBrains Mono", "SF Mono", monospace;
-  font-size: 3rem;
-  font-weight: 700;
-  letter-spacing: 0.5rem;
-  background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+.text-party-gradient {
+  background: linear-gradient(135deg, var(--color-pink), var(--color-purple));
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-align: center;
 }
 
-/* ========================================
-   PROGRESS BAR
-======================================== */
-
-.progress-bar {
-  width: 100%;
-  height: 6px;
-  background: var(--background-elevated);
-  border-radius: 3px;
-  overflow: hidden;
+/* Color Utilities */
+.bg-pink {
+  background-color: var(--color-pink);
 }
 
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--accent-start), var(--accent-end));
-  transition: width 0.3s ease;
+.bg-yellow {
+  background-color: var(--color-yellow);
+}
+
+.bg-blue {
+  background-color: var(--color-blue);
+}
+
+.bg-green {
+  background-color: var(--color-green);
+}
+
+.bg-purple {
+  background-color: var(--color-purple);
+}
+
+.text-pink {
+  color: var(--color-pink);
+}
+
+.text-yellow {
+  color: var(--color-yellow);
+}
+
+.text-blue {
+  color: var(--color-blue);
+}
+
+.text-green {
+  color: var(--color-green);
+}
+
+.text-purple {
+  color: var(--color-purple);
 }
