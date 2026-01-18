@@ -2,7 +2,7 @@ const getApiBase = () => {
     if (typeof window !== 'undefined' && (window as any).__RUNTIME_CONFIG__?.API_URL) {
         return (window as any).__RUNTIME_CONFIG__.API_URL;
     }
-    return process.env.NEXT_PUBLIC_API_URL || 'http://api.champanzee.tech/v1';
+    return process.env.NEXT_PUBLIC_API_URL || 'https://api.champanzee.tech/v1';
 };
 
 // ============================================
