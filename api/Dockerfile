@@ -1,32 +1,24 @@
-# Build stage
-FROM golang:1.23-alpine AS builder
+FROM golang:alpine
 
 WORKDIR /app
 
-# Copy go mod files first for better caching (from api/ subdirectory)
+# Set Go proxy to include direct fallback
+ENV GOPROXY=https://proxy.golang.org,direct
+
+# Copy go mod files
 COPY api/go.mod api/go.sum ./
 
 # Download dependencies
 RUN go mod download
 
-# Copy source code from api/
+# Copy source code
 COPY api/ .
 
 # Build the application
-RUN CGO_ENABLED=0 GOOS=linux go build -o main .
-
-# Final stage
-FROM alpine:latest
-
-RUN apk --no-cache add ca-certificates
-
-WORKDIR /root/
-
-# Copy the binary from builder stage
-COPY --from=builder /app/main .
+RUN go build -o main .
 
 # Expose port
 EXPOSE 8080
 
-# Command to run
+# Run the app
 CMD ["./main"]
