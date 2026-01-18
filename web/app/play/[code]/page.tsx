@@ -202,7 +202,7 @@ export default function PlayerGame() {
     };
 
     const handleSubmit = async () => {
-        if (!currentQuestion) return;
+        if (!currentQuestion || submitting || gameState !== 'answering') return;
 
         const hasAnswer = currentQuestion.type === 'DEGREE' || answer.trim().length > 0;
         if (!hasAnswer) return;
@@ -231,9 +231,10 @@ export default function PlayerGame() {
     };
 
     const handleSkip = async () => {
-        if (!currentQuestion) return;
+        if (!currentQuestion || submitting) return;
 
         try {
+            setSubmitting(true);
             const response = await player.skipQuestion(code, currentQuestion.key);
 
             if (response.done) {
@@ -248,6 +249,8 @@ export default function PlayerGame() {
             }
         } catch (err) {
             console.error('Failed to skip:', err);
+        } finally {
+            setSubmitting(false);
         }
     };
 
@@ -442,6 +445,7 @@ export default function PlayerGame() {
                                     <MCQControl
                                         options={currentQuestion.options}
                                         onSelect={(index) => {
+                                            if (submitting || gameState !== 'answering') return;
                                             // Auto submit for MCQ
                                             const attemptId = Math.random().toString(36).substring(7);
                                             setLastAttemptId(attemptId);
@@ -456,7 +460,7 @@ export default function PlayerGame() {
                                             });
                                             setGameState('waiting_for_ai');
                                         }}
-                                        disabled={submitting}
+                                        disabled={submitting || gameState !== 'answering'}
                                     />
                                 )}
 
