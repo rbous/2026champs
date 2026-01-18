@@ -26,6 +26,7 @@ import (
 // @host localhost:8080
 // @BasePath /v1
 func main() {
+	log.Println("started")
 	ctx := context.Background()
 
 	// Load AI config and log model settings
