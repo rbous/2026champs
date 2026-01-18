@@ -50,7 +50,7 @@ export default function Home() {
       {/* Hero Section */}
       <div className="text-center mb-12 animate-fade-in relative z-10">
         <h1 className="text-6xl font-black mb-6 hover:scale-105 transition-transform duration-300 transform -rotate-2">
-          <span className="text-party-gradient drop-shadow-sm">2026 CHAMPS</span>
+          <span className="text-party-gradient drop-shadow-sm">CHAMP-ANZEE</span>
         </h1>
         <p className="text-xl font-bold text-[var(--text-muted)] max-w-lg mx-auto bg-white/80 p-4 rounded-xl border-2 border-dashed border-[var(--border-color)] rotate-1">
           🎉 The most fun way to survey!
